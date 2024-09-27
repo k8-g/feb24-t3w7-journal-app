@@ -22,13 +22,21 @@
 localhost:3000/search/:searchKey/:searchValue
 localhost:3000/search/type/review
 
+
+
+
+## Contexts
+
+- Journal Entries 
+	- Array of objects 
+
 ```js
 {
 	id: "123456789",
 	type: "review",
 	name: "Example post name",
 	content: "Some cool content goes here.",
-	author: "Kate",
+	author: "Alex",
 	lastEdited: 123891476520689370 // milliseconds since JS dates are stored as that internally 
 }
 ```
