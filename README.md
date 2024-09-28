@@ -1,42 +1,53 @@
-# Journal App
+import { useEffect, useState } from "react";
+import { useJournalEntriesData } from "../contexts/EntriesContext";
+import EntryForm from "./EntryForm";
+import ViewEntry from "./ViewEntry";
 
-## Routes 
 
-- `localhost:3000/` 
-	- root or homepage 
-	- Welcome screen 
-	- Journal entry form / "comment box"
-	- List the entries 
-		- latest 5 entries? 
-- `localhost:3000/entries/:entryId/`
-	- View and edit individual journal entries by their entryId
-	- "edit in place" for journal entry data
-		- toggle between read-only and an editable form 
-	- button to delete the post 
-- `localhost:3000/search/:searchKey/:searchValue`
-	- Show a list of journal entries where each entry matches the searchParam
-- `localhost:3000/latest/`
-	- List the entries
-		- latest INFINITY entries 
+export default function JournalEntryContainer({entryId}){
 
-localhost:3000/search/:searchKey/:searchValue
-localhost:3000/search/type/review
+	let [isEditing, setIsEditing] = useState(false);
+	let journalEntriesData = useJournalEntriesData();
+
+	let [currentJournalEntry, setCurrentJournalEntry] = useState({});
+
+	useEffect(() => {
+		// On componentDidMount, retrieve journal entry with id of {entryId}
+		// from {journalEntriesData}
+		// and set that into {currentJournalEntry}
+		let currentEntry = journalEntriesData.find((entry) => entry.id == entryId);
+		setCurrentJournalEntry(currentEntry);
+	}, [journalEntriesData]);
 
 
 
 
-## Contexts
+	if (isEditing){
+		return <>
+			<EntryForm entryId={currentJournalEntry.id} />
+			<button onClick={() => setIsEditing(false)}>
+				Finish Editing
+			</button>
+		</>
+	} else {
+		return <>
+			<ViewEntry journalEntry={currentJournalEntry} />
+			<button onClick={() => setIsEditing(true)}>
+				Start Editing
+			</button>
+		</>
+	}
 
-- Journal Entries 
-	- Array of objects 
-
-```js
-{
-	id: "123456789",
-	type: "review",
-	name: "Example post name",
-	content: "Some cool content goes here.",
-	author: "Alex",
-	lastEdited: 123891476520689370 // milliseconds since JS dates are stored as that internally 
+	// return(
+	// 	<>
+	// 		{isEditing ? 
+	// 		<EntryForm entryId={currentJournalEntry.id} />
+	// 		:
+	// 		<ViewEntry entryId={currentJournalEntry.id} />
+	// 		}
+	// 		<button onClick={() => setIsEditing(!isEditing)}>
+	// 			Toggle Editing
+	// 		</button>
+	// 	</>
+	// )
 }
-```
